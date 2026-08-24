@@ -8,8 +8,8 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script type="module" crossorigin src="./assets/index-EdIiRO1q.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-GHHA2Ob6.css">
+  <script type="module" crossorigin src="./assets/index-_ZOjgM9t.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DyPCU4V0.css">
 </head>
 <body>
 
@@ -150,37 +150,25 @@
         <div class="metric"><span class="val" id="hero-miles">—</span><span class="lbl">Miles</span></div>
         <div class="metric"><span class="val" id="hero-days">—</span><span class="lbl">Days</span></div>
       </div>
+      <button type="button" class="trip-focus-play" id="trip-focus-play" aria-label="Play this journey">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+        Play journey
+      </button>
     </div>
     <div class="filmstrip" id="trip-filmstrip" aria-label="Trip photos"></div>
   </aside>
 
-  <!-- Always-visible journey instrument bar (home / trip-focus) -->
+  <!-- Compact journey dock — small floating boxes (home / trip-focus) -->
   <nav class="journey-dock" id="journey-dock" aria-label="Journey picker">
-    <button type="button" class="journey-open-btn" id="journey-open-btn" aria-haspopup="dialog" aria-controls="journey-browser">
+    <button type="button" class="journey-dock-box journey-open-btn" id="journey-open-btn" aria-haspopup="dialog" aria-controls="journey-browser">
       <svg class="journey-open-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
         <path d="M3 6h18M3 12h18M3 18h18"/>
       </svg>
       <span class="journey-open-label" id="journey-open-label">Journeys</span>
       <span class="journey-open-badge" id="journey-open-badge">—</span>
     </button>
-    <div class="journey-quick-rail" id="journey-quick-rail" aria-label="Quick journey picks"></div>
-    <div class="dock-transport" role="group" aria-label="Playback">
-      <button class="icon-btn skip" id="btn-rewind" disabled title="Rewind 8 seconds (←)" aria-label="Rewind 8 seconds">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.5 18V6l-8.5 6 8.5 6zm.5-6 8.5 6V6L12 12z"/></svg>
-      </button>
-      <button class="icon-btn primary" id="btn-play" disabled title="Play (Space)" aria-label="Play">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
-      </button>
-      <button class="icon-btn skip" id="btn-forward" disabled title="Skip ahead 8 seconds (→)" aria-label="Skip ahead 8 seconds">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 18V6l8.5 6L4 18zm9 0V6l8.5 6-8.5 6z"/></svg>
-      </button>
-    </div>
-    <div class="speed-rail" id="speed-rail" title="Playback speed">
-      <label for="speed">Speed</label>
-      <input type="range" id="speed" min="0.25" max="4" step="0.05" value="1" aria-valuemin="0.25" aria-valuemax="4" aria-label="Playback speed">
-      <span id="speed-label" class="speed-val">1×</span>
-    </div>
-    <button type="button" class="journey-atlas-btn" id="journey-atlas-btn" hidden aria-label="Back to Atlas">Atlas</button>
+    <div class="journey-quick-rail" id="journey-quick-rail" aria-label="Quick journey picks" hidden></div>
+    <button type="button" class="journey-dock-box journey-atlas-btn" id="journey-atlas-btn" hidden aria-label="Back to Atlas">Atlas</button>
   </nav>
 
   <!-- Watch playback panel — play-state transport -->
@@ -202,7 +190,11 @@
           <div class="scrub-fill" id="scrub-fill"></div>
           <input type="range" id="scrubber" min="0" max="1000" value="0" aria-label="Playback position">
         </div>
-        <span class="watch-speed-label" id="watch-speed-label">1×</span>
+      </div>
+      <div class="speed-rail watch-speed-rail" id="speed-rail" title="Playback speed">
+        <label for="speed">Speed</label>
+        <input type="range" id="speed" min="0.25" max="4" step="0.05" value="1" aria-valuemin="0.25" aria-valuemax="4" aria-label="Playback speed">
+        <span id="speed-label" class="speed-val">1×</span>
       </div>
       <div class="dock-sr" aria-hidden="true">
         <div id="prog-text">Select a trip to replay</div>
