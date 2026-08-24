@@ -8,8 +8,8 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script type="module" crossorigin src="./assets/index-DEUysaCZ.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-9bSK9HfY.css">
+  <script type="module" crossorigin src="./assets/index-BqwvsGEw.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DBO3Hqzt.css">
 </head>
 <body>
 
@@ -26,9 +26,9 @@
   <div id="onboarding">
     <div class="onboard-card">
       <h2>Pick a journey</h2>
-      <p>Choose any trip from the list, then press <span class="highlight">Play</span> to replay your miles on the map.</p>
+      <p>Browse journeys from the dock below the map, then press <span class="highlight">Play</span> to replay your miles.</p>
       <div class="onboard-actions">
-        <button class="btn gold" id="onboard-featured">Open a journey</button>
+        <button class="btn gold" id="onboard-featured">Browse journeys</button>
         <button class="btn" id="onboard-dismiss">Browse the map</button>
       </div>
     </div>
@@ -74,7 +74,7 @@
     <div class="cap"><strong id="memory-card-title">Memory</strong><span id="memory-card-meta"></span></div>
   </div>
 
-  <!-- Top bar -->
+  <!-- Top bar (home / trip-focus) -->
   <header class="top-bar">
     <button type="button" class="brand" id="brand-home" aria-label="Back to Atlas — all routes">My <span>Mile</span> Diary</button>
     <div class="stat-rail">
@@ -85,7 +85,35 @@
     </div>
   </header>
 
+  <!-- Watch HUD — play-state chrome (same design language as home) -->
+  <div class="watch-hud" id="watch-hud" aria-hidden="true">
+    <button type="button" class="watch-brand-pill" id="watch-brand" aria-label="Back to Atlas">
+      <span class="watch-brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M3 18L9 8l3.5 5.5L16 9l5 9H3z" fill="currentColor"/><path d="M12 4l2.2 3.8H9.8L12 4z" fill="currentColor" opacity=".7"/></svg>
+      </span>
+      <span class="watch-brand-text">My <em>Mile</em> Diary</span>
+    </button>
+    <div class="watch-meta-pill" id="watch-meta-pill" role="status">Jul 2026 · Bellevue → Olympic · — mi</div>
+    <button type="button" class="watch-place-pill" id="watch-place-pill" aria-label="Current place">
+      <span class="watch-place-dot" aria-hidden="true"></span>
+      <span id="watch-place-label">Olympic Peninsula</span>
+      <svg class="watch-place-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+    </button>
+  </div>
+
   <div class="trip-clock" id="trip-clock" aria-live="off"></div>
+
+  <!-- Mobile journey preview (opens from path thumbnail tap) -->
+  <section class="mobile-swipe" id="mobile-swipe" aria-label="Journey preview" hidden>
+    <button type="button" class="mobile-swipe-icon-btn" id="mobile-swipe-menu" aria-label="Open journey list">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+    <button type="button" class="mobile-swipe-icon-btn mobile-swipe-filter" id="mobile-swipe-filter" aria-label="Filter era">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
+    </button>
+    <button type="button" class="mobile-preview-backdrop" id="mobile-preview-backdrop" aria-label="Close preview" hidden></button>
+    <div class="mobile-swipe-stack" id="mobile-swipe-stack" hidden></div>
+  </section>
 
   <div class="story-overlay" id="story-overlay">
     <div class="story-caption" id="story-caption"></div>
@@ -109,24 +137,8 @@
   <div class="export-status" id="export-status">Recording…</div>
   <div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
 
-  <button class="panel-toggle" id="sidebar-toggle" title="Toggle trips panel" aria-label="Toggle journeys panel">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
-  </button>
-
-
-  <aside class="trip-panel sheet-peek" id="sidebar">
-    <button type="button" class="panel-grab" id="panel-grab" aria-label="Resize journey list">
-      <span class="panel-grab-bar" aria-hidden="true"></span>
-      <span class="panel-grab-hint" id="panel-grab-hint">Swipe up for all journeys</span>
-    </button>
-    <nav class="mobile-dest-rail" id="mobile-dest-rail" aria-label="Quick destinations" hidden></nav>
-    <div class="panel-head">
-      <button type="button" class="panel-back-atlas" id="panel-back-atlas" hidden>← Back to Atlas</button>
-      <div class="eyebrow">Travel diary</div>
-      <h2 id="panel-title">Journeys</h2>
-      <div class="sub" id="panel-sub"><span id="panel-trip-count">—</span> trips · — miles</div>
-    </div>
-
+  <!-- Trip focus card — compact stats when a journey is selected -->
+  <aside class="trip-focus-card" id="trip-focus-card" aria-label="Selected journey">
     <div class="trip-hero" id="hero-card">
       <div class="trip-hero-name" id="hero-name">Overview</div>
       <div class="trip-hero-via" id="hero-via">Choose a journey to begin cinematic playback.</div>
@@ -137,25 +149,19 @@
         <div class="metric"><span class="val" id="hero-stops">—</span><span class="lbl">Places</span></div>
       </div>
     </div>
-
     <div class="filmstrip" id="trip-filmstrip" aria-label="Trip photos"></div>
-
-    <div class="trip-scroll" id="trip-list">
-      <div class="group-label">Map</div>
-      <div class="trip-item active" data-id="all">
-        <div class="trip-swatch" style="background:linear-gradient(180deg,#64748b,#94a3b8)"></div>
-        <div>
-          <div class="trip-name">All journeys</div>
-          <div class="trip-meta"><span id="stat-trip-count">—</span> trips · — mi</div>
-        </div>
-      </div>
-      <div class="group-label">Journeys</div>
-            <div id="trip-list-items"></div>
-    </div>
   </aside>
 
-  <!-- Play (bottom-center) — skip ±8s of viewing; speed lives in #speed-rail -->
-  <div class="transport-dock" id="transport-dock">
+  <!-- Always-visible journey instrument bar (home / trip-focus) -->
+  <nav class="journey-dock" id="journey-dock" aria-label="Journey picker">
+    <button type="button" class="journey-open-btn" id="journey-open-btn" aria-haspopup="dialog" aria-controls="journey-browser">
+      <svg class="journey-open-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+      <span class="journey-open-label" id="journey-open-label">Journeys</span>
+      <span class="journey-open-badge" id="journey-open-badge">—</span>
+    </button>
+    <div class="journey-quick-rail" id="journey-quick-rail" aria-label="Quick journey picks"></div>
     <div class="dock-transport" role="group" aria-label="Playback">
       <button class="icon-btn skip" id="btn-rewind" disabled title="Rewind 8 seconds (←)" aria-label="Rewind 8 seconds">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.5 18V6l-8.5 6 8.5 6zm.5-6 8.5 6V6L12 12z"/></svg>
@@ -167,22 +173,76 @@
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 18V6l8.5 6L4 18zm9 0V6l8.5 6-8.5 6z"/></svg>
       </button>
     </div>
-    <div class="dock-sr" aria-hidden="true">
-      <div id="prog-text">Select a trip to replay</div>
-      <div id="scrub-fill"></div>
-      <input type="range" id="scrubber" min="0" max="1000" value="0" tabindex="-1">
+    <div class="speed-rail" id="speed-rail" title="Playback speed">
+      <label for="speed">Speed</label>
+      <input type="range" id="speed" min="0.25" max="4" step="0.05" value="1" aria-valuemin="0.25" aria-valuemax="4" aria-label="Playback speed">
+      <span id="speed-label" class="speed-val">1×</span>
+    </div>
+    <button type="button" class="journey-atlas-btn" id="journey-atlas-btn" hidden aria-label="Back to Atlas">Atlas</button>
+  </nav>
+
+  <!-- Watch playback panel — play-state transport -->
+  <div class="watch-transport" id="watch-transport" aria-hidden="true">
+    <div class="watch-transport-inner">
+      <div class="dock-transport" role="group" aria-label="Playback">
+        <button class="icon-btn skip" id="btn-rewind-watch" title="Rewind 8 seconds (←)" aria-label="Rewind 8 seconds">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.5 18V6l-8.5 6 8.5 6zm.5-6 8.5 6V6L12 12z"/></svg>
+        </button>
+        <button class="icon-btn primary" id="btn-play-watch" title="Play (Space)" aria-label="Play">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+        </button>
+        <button class="icon-btn skip" id="btn-forward-watch" title="Skip ahead 8 seconds (→)" aria-label="Skip ahead 8 seconds">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 18V6l8.5 6L4 18zm9 0V6l8.5 6-8.5 6z"/></svg>
+        </button>
+      </div>
+      <div class="watch-scrub">
+        <div class="scrub-track">
+          <div class="scrub-fill" id="scrub-fill"></div>
+          <input type="range" id="scrubber" min="0" max="1000" value="0" aria-label="Playback position">
+        </div>
+        <span class="watch-speed-label" id="watch-speed-label">1×</span>
+      </div>
+      <div class="dock-sr" aria-hidden="true">
+        <div id="prog-text">Select a trip to replay</div>
+      </div>
     </div>
   </div>
-  <div class="speed-rail" id="speed-rail" title="Playback speed">
-    <label for="speed">Speed</label>
-    <input type="range" id="speed" min="0.25" max="4" step="0.05" value="1" aria-valuemin="0.25" aria-valuemax="4" aria-label="Playback speed">
-    <span id="speed-label" class="speed-val">1×</span>
+  <div class="watch-progress-line" id="watch-progress-line" aria-hidden="true">
+    <span class="watch-progress-dot" id="watch-progress-dot"></span>
   </div>
 
-  <!-- Master timeline -->
-  <div class="timeline-bar">
+  <!-- Full journey browser modal -->
+  <div class="journey-browser" id="journey-browser" hidden role="dialog" aria-modal="true" aria-labelledby="browser-title">
+    <button type="button" class="journey-browser-backdrop" id="journey-browser-backdrop" aria-label="Close journey browser"></button>
+    <div class="journey-browser-panel">
+      <header class="journey-browser-head">
+        <div>
+          <div class="eyebrow">Travel diary</div>
+          <h2 id="browser-title">Your journeys</h2>
+          <div class="sub" id="panel-sub"><span id="panel-trip-count">—</span> trips · — miles</div>
+        </div>
+        <button type="button" class="journey-browser-close" id="journey-browser-close" aria-label="Close">×</button>
+      </header>
+      <nav class="browser-dest-rail" id="browser-dest-rail" aria-label="Browse by destination" hidden></nav>
+      <div class="trip-scroll" id="trip-list">
+        <div class="group-label">Map</div>
+        <div class="trip-item active" data-id="all">
+          <div class="trip-swatch" style="background:linear-gradient(180deg,#64748b,#94a3b8)"></div>
+          <div>
+            <div class="trip-name">All journeys</div>
+            <div class="trip-meta"><span id="stat-trip-count">—</span> trips · — mi</div>
+          </div>
+        </div>
+        <div class="group-label">Journeys</div>
+        <div id="trip-list-items"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master timeline removed from UI (owner: wasted space). Keep DOM for legacy JS ids. -->
+  <div class="timeline-bar" hidden aria-hidden="true">
     <div class="timeline-head">
-      <div class="timeline-label" id="timeline-label">Journey Timeline</div>
+      <div class="timeline-label" id="timeline-label">Journey Timeline · 2023 — 2026</div>
       <div class="era-rail" id="era-rail" role="group" aria-label="Filter journeys by year">
         <span class="era-rail-label">Era</span>
         <button type="button" class="era-chip active" data-year="all">All</button>
@@ -197,6 +257,6 @@
     </div>
   </div>
 
-    <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
 </body>
 </html>
