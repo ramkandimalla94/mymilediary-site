@@ -8,8 +8,8 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script type="module" crossorigin src="./assets/index-C4vQbOlg.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-ARd--fFe.css">
+  <script type="module" crossorigin src="./assets/index-CLJhZAVd.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-COtwzJoU.css">
 </head>
 <body>
 
@@ -188,22 +188,26 @@
   <!-- Watch playback panel — play-state transport -->
   <div class="watch-transport" id="watch-transport" aria-hidden="true">
     <div class="watch-transport-inner">
-      <div class="dock-transport" role="group" aria-label="Playback">
-        <button class="icon-btn skip" id="btn-rewind-watch" title="Rewind 8 seconds (←)" aria-label="Rewind 8 seconds">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.5 18V6l-8.5 6 8.5 6zm.5-6 8.5 6V6L12 12z"/></svg>
-        </button>
-        <button class="icon-btn primary" id="btn-play-watch" title="Play (Space)" aria-label="Play">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
-        </button>
-        <button class="icon-btn skip" id="btn-forward-watch" title="Skip ahead 8 seconds (→)" aria-label="Skip ahead 8 seconds">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 18V6l8.5 6L4 18zm9 0V6l8.5 6-8.5 6z"/></svg>
-        </button>
-      </div>
-      <div class="watch-scrub">
+      <div class="watch-scrub" aria-label="Journey timeline">
+        <span class="watch-time" id="watch-time-elapsed" aria-hidden="true">0:00</span>
         <div class="scrub-track">
           <div class="scrub-fill" id="scrub-fill"></div>
           <input type="range" id="scrubber" min="0" max="1000" value="0" aria-label="Playback position">
         </div>
+        <span class="watch-time watch-time-remain" id="watch-time-remain" aria-hidden="true">0:00</span>
+      </div>
+      <div class="dock-transport" role="group" aria-label="Playback">
+        <button type="button" class="icon-btn skip skip-moment" id="btn-rewind-watch" title="Previous moment (←)" aria-label="Previous moment">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 6h2v12H7V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg>
+          <span class="skip-label">Prev</span>
+        </button>
+        <button type="button" class="icon-btn primary" id="btn-play-watch" title="Play (Space)" aria-label="Play">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5z"/></svg>
+        </button>
+        <button type="button" class="icon-btn skip skip-moment" id="btn-forward-watch" title="Next moment (→)" aria-label="Next moment">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M5 18V6l8.5 6L5 18zM15 6h2v12h-2V6z"/></svg>
+          <span class="skip-label">Next</span>
+        </button>
       </div>
       <div class="speed-rail watch-speed-rail" id="speed-rail" title="Playback speed">
         <label for="speed">Speed</label>
