@@ -8,8 +8,8 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script type="module" crossorigin src="./assets/index-uF4xG5xB.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-COtwzJoU.css">
+  <script type="module" crossorigin src="./assets/index-_NLN_zzN.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CL4NBE9v.css">
 </head>
 <body>
 
@@ -62,7 +62,22 @@
     <div id="map"></div>
     <div class="map-vignette"></div>
     <div class="map-grain"></div>
+    <div class="map-stars" aria-hidden="true"></div>
   </div>
+
+  <!-- Earth → Atlas intro (Google 3D, once per session) -->
+  <div class="earth-intro" id="earth-intro" aria-hidden="true">
+    <div class="earth-intro-copy">
+      <div class="earth-intro-eyebrow">Travel diary</div>
+      <h2>Every mile, on the real Earth.</h2>
+      <p><span id="earth-intro-miles">—</span> miles · <span id="earth-intro-trips">—</span> journeys</p>
+    </div>
+    <button type="button" class="earth-intro-skip" id="earth-intro-skip">Skip</button>
+  </div>
+
+  <!-- Honest renderer badge — only when the 3D scene could not start -->
+  <div class="map-mode-badge" id="map-mode-badge" role="status">2D mode · 3D needs hardware WebGL</div>
+  <div class="watch-loading-veil" id="watch-loading-veil" aria-hidden="true"><span>Rendering Earth…</span></div>
 
   <div class="photo-hover" id="photo-hover" aria-hidden="true">
     <img id="photo-hover-img" alt="">
@@ -112,6 +127,11 @@
     <div class="watch-status-bar" id="watch-status-bar" aria-live="polite">
       <span class="watch-trip-time" id="watch-trip-time"></span>
       <span class="watch-story-line" id="watch-story-line"></span>
+    </div>
+    <div class="watch-hud-extras" id="watch-hud-extras" aria-hidden="true">
+      <span class="watch-day-pill" id="watch-day-pill"></span>
+      <span class="watch-odometer" id="watch-odometer" title="Miles so far"></span>
+      <span class="watch-tod" id="watch-tod"></span>
     </div>
   </div>
 
@@ -185,17 +205,24 @@
     <button type="button" class="journey-dock-box journey-atlas-btn" id="journey-atlas-btn" hidden aria-label="Back to Atlas">Atlas</button>
   </nav>
 
-  <!-- Watch playback panel — play-state transport -->
-  <div class="watch-transport" id="watch-transport" aria-hidden="true">
-    <div class="watch-transport-inner">
-      <div class="watch-scrub" aria-label="Journey timeline">
+  <!-- Cinema Rail — Watch transport: hairline timeline with chapters + auto-hiding controls -->
+  <div class="watch-transport cinema-rail" id="watch-transport" aria-hidden="true">
+    <div class="rail-band" id="rail-band">
+      <div class="rail-filmstrip" id="rail-filmstrip" aria-hidden="true">
+        <img id="rail-filmstrip-img" alt="">
+        <span id="rail-filmstrip-cap"></span>
+      </div>
+      <div class="watch-scrub rail-scrub" aria-label="Journey timeline">
         <span class="watch-time" id="watch-time-elapsed" aria-hidden="true">0:00</span>
-        <div class="scrub-track">
+        <div class="scrub-track rail-track" id="rail-track">
           <div class="scrub-fill" id="scrub-fill"></div>
+          <div class="rail-chapters" id="rail-chapters" aria-hidden="true"></div>
           <input type="range" id="scrubber" min="0" max="1000" value="0" aria-label="Playback position">
         </div>
         <span class="watch-time watch-time-remain" id="watch-time-remain" aria-hidden="true">0:00</span>
       </div>
+    </div>
+    <div class="watch-transport-inner rail-controls">
       <div class="dock-transport" role="group" aria-label="Playback">
         <button type="button" class="icon-btn skip skip-moment" id="btn-rewind-watch" title="Previous moment (←)" aria-label="Previous moment">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 6h2v12H7V6zm3.5 6 8.5 6V6l-8.5 6z"/></svg>
@@ -218,6 +245,7 @@
         <div id="prog-text">Select a trip to replay</div>
       </div>
     </div>
+    <div class="rail-hint" id="rail-hint" aria-hidden="true">Move to show controls · Space pause · ← → moments</div>
   </div>
   <div class="watch-progress-line" id="watch-progress-line" aria-hidden="true">
     <span class="watch-progress-dot" id="watch-progress-dot"></span>
