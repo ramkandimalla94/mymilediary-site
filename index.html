@@ -8,8 +8,8 @@
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
   
-  <script type="module" crossorigin src="./assets/index-CQOO6XPr.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CwMdMMIN.css">
+  <script type="module" crossorigin src="./assets/index-LDUdZelK.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-FiLlkc1b.css">
 </head>
 <body>
 
@@ -43,7 +43,7 @@
         </li>
       </ul>
       <div class="onboard-actions">
-        <button class="btn onboard-primary" id="onboard-featured">Watch a journey</button>
+        <button class="btn onboard-primary" id="onboard-featured">Open a journey</button>
         <button class="btn onboard-ghost" id="onboard-dismiss">Just explore the map</button>
       </div>
       <div class="onboard-foot">First visit · won’t show again</div>
@@ -167,7 +167,7 @@
       <button type="button" class="btn" id="cinema-share">Share</button>
     </div>
   </div>
-  <div class="watch-esc-hint" id="watch-esc-hint" hidden>Esc — pause · Esc again — Atlas</div>
+  <div class="watch-esc-hint" id="watch-esc-hint" hidden>Esc — pause · Esc again — trip overview</div>
   <div class="export-status" id="export-status">Recording…</div>
   <div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
 
@@ -176,14 +176,20 @@
     <div class="trip-hero" id="hero-card">
       <div class="trip-hero-name" id="hero-name">Overview</div>
       <div class="trip-hero-via" id="hero-via">Choose a journey to begin cinematic playback.</div>
+      <div class="hero-memory-badge" id="hero-memory-badge" hidden></div>
       <div class="metric-grid">
         <div class="metric"><span class="val" id="hero-miles">—</span><span class="lbl">Miles</span></div>
         <div class="metric"><span class="val" id="hero-days">—</span><span class="lbl">Days</span></div>
       </div>
-      <button type="button" class="trip-focus-play" id="trip-focus-play" aria-label="Play this journey">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
-        Play journey
-      </button>
+      <div class="trip-focus-actions">
+        <button type="button" class="trip-focus-play" id="trip-focus-play" aria-label="Play this journey">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+          Play journey
+        </button>
+        <button type="button" class="trip-focus-highlights" id="trip-focus-highlights" hidden aria-label="Watch highlights — start at first memory, faster between chapters">
+          Highlights
+        </button>
+      </div>
     </div>
     <div class="filmstrip" id="trip-filmstrip" aria-label="Trip photos"></div>
   </aside>
@@ -236,6 +242,9 @@
           <span class="skip-label">Next</span>
         </button>
       </div>
+      <button type="button" class="rail-highlights-btn" id="btn-highlights-watch" title="Highlights — faster travel between memories" aria-pressed="false" aria-label="Highlights reel">
+        Highlights
+      </button>
       <div class="speed-rail watch-speed-rail" id="speed-rail" title="Playback speed">
         <label for="speed">Speed</label>
         <input type="range" id="speed" min="0.25" max="4" step="0.05" value="1" aria-valuemin="0.25" aria-valuemax="4" aria-label="Playback speed">
@@ -245,7 +254,13 @@
         <div id="prog-text">Select a trip to replay</div>
       </div>
     </div>
-    <div class="rail-hint" id="rail-hint" aria-hidden="true">Move to show controls · Space pause · ← → moments</div>
+    <div class="rail-legend" id="rail-legend" hidden role="status">
+      <span class="rail-legend-swatch is-photo" aria-hidden="true"></span><span>Photo</span>
+      <span class="rail-legend-swatch is-stay" aria-hidden="true"></span><span>Overnight</span>
+      <span class="rail-legend-swatch is-charge" aria-hidden="true"></span><span>Long stop</span>
+      <button type="button" class="rail-legend-dismiss" id="rail-legend-dismiss">Got it</button>
+    </div>
+    <div class="rail-hint" id="rail-hint" aria-hidden="true">Move to show controls · Space pause · ← → moments · Tab chapters</div>
   </div>
   <div class="watch-progress-line" id="watch-progress-line" aria-hidden="true">
     <span class="watch-progress-dot" id="watch-progress-dot"></span>
