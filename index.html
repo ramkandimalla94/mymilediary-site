@@ -4,57 +4,48 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>My Mile Diary</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='%23000'/><circle cx='50' cy='50' r='18' fill='none' stroke='%230A84FF' stroke-width='6'/></svg>">
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-  
-  <script type="module" crossorigin src="./assets/index-Co9cx-59.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-FiLlkc1b.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-C2w4h-NW.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-HlD9FExz.css">
 </head>
-<body>
+<body class="studio-ui mock-b">
 
   <!-- Token gate (shown when no token baked in at build time) -->
   <div id="token-gate">
-    <div class="logo" style="font-size:42px;margin-bottom:12px;font-family:var(--font-display)">My Mile Diary</div>
+    <div class="logo" style="font-size:42px;margin-bottom:12px;font-family:var(--font-brand)">My Mile Diary</div>
     <h2>Mapbox Token Required</h2>
     <p>Paste your free <a href="https://account.mapbox.com/access-tokens/" target="_blank" rel="noopener">Mapbox public token</a> to load satellite terrain. Stored locally in your browser only.</p>
     <input type="password" id="token-input" placeholder="pk.eyJ..." autocomplete="off">
     <button class="btn primary" id="token-submit" style="padding:12px 32px">Launch Map</button>
   </div>
 
-  <!-- First-visit welcome — glass card on the live map (hybrid mock) -->
+  <!-- First-visit welcome — full-bleed Apple-style hero over the live map -->
   <div id="onboarding" aria-hidden="true">
     <div class="onboard-card">
-      <div class="onboard-eyebrow">Personal travel diary</div>
-      <h2>Road trips you can watch like a film.</h2>
-      <p>Pick a journey. Press play. Follow the exact roads and trails — then pause on the photos taken along the way.</p>
-      <ul class="onboard-beats">
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M9 3v15M15 6v15"/></svg>
-          Replay miles on a 3D map
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="6" width="18" height="14" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>
-          Photos appear where they were taken
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 18l5-10 4 6 2.5-4L20 18H4z"/></svg>
-          <span><span id="onboard-trip-count">—</span> journeys from Texas to the Rockies</span>
-        </li>
+      <div class="onboard-brand" aria-hidden="true">My <em>Mile</em> Diary</div>
+      <div class="onboard-eyebrow">Travel, replayed</div>
+      <h2>Your roads.<br>Your photos.<br>One film.</h2>
+      <p>Follow the exact route. Pause on every memory.</p>
+      <ul class="onboard-beats" hidden>
+        <li><span id="onboard-trip-count">—</span> journeys</li>
       </ul>
       <div class="onboard-actions">
         <button class="btn onboard-primary" id="onboard-featured">Open a journey</button>
-        <button class="btn onboard-ghost" id="onboard-dismiss">Just explore the map</button>
+        <button class="btn onboard-ghost" id="onboard-dismiss">Explore the map</button>
       </div>
-      <div class="onboard-foot">First visit · won’t show again</div>
+      <div class="onboard-foot">Shown once</div>
     </div>
   </div>
 
   <!-- Splash -->
   <div id="splash">
-    <div class="brand-mark">Travel diary</div>
-    <h1>My Mile Diary</h1>
-    <p>Miles become memories · <span id="stat-trip-count">—</span> journeys · — miles</p>
+    <div class="brand-mark">My Mile Diary</div>
+    <h1>Miles,<br>as cinema.</h1>
+    <p><span id="stat-trip-count">—</span> journeys ready to watch</p>
     <div class="splash-bar"><div class="splash-fill" id="splash-fill"></div></div>
   </div>
 
@@ -65,11 +56,44 @@
     <div class="map-stars" aria-hidden="true"></div>
   </div>
 
+  <!-- Mock B — Cinema letterbox (Watch) -->
+  <div class="cinema-letterbox" id="cinema-letterbox" aria-hidden="true">
+    <div class="cinema-letterbox-bar is-top"></div>
+    <div class="cinema-letterbox-bar is-bot"></div>
+  </div>
+
+  <!-- Mock B — Streaming atlas catalog (home) -->
+  <section class="cinema-catalog" id="cinema-catalog" aria-label="Journey catalog" hidden>
+    <div class="cinema-featured" id="cinema-featured">
+      <div class="cinema-featured-bg" id="cinema-featured-bg" aria-hidden="true"></div>
+      <div class="cinema-featured-shade" aria-hidden="true"></div>
+      <div class="cinema-featured-copy">
+        <div class="cinema-featured-kicker">Featured journey</div>
+        <h2 class="cinema-featured-title" id="cinema-featured-title">—</h2>
+        <p class="cinema-featured-meta" id="cinema-featured-meta">—</p>
+        <div class="cinema-featured-actions">
+          <button type="button" class="cinema-play-btn" id="cinema-featured-play">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+            Play
+          </button>
+          <button type="button" class="cinema-info-btn" id="cinema-featured-open">Open</button>
+        </div>
+      </div>
+    </div>
+    <div class="cinema-row">
+      <div class="cinema-row-head">
+        <div class="cinema-row-label">Journeys</div>
+        <button type="button" class="cinema-browse-btn" id="cinema-browse-btn">All Journeys</button>
+      </div>
+      <div class="cinema-poster-row" id="cinema-poster-row" role="list"></div>
+    </div>
+  </section>
+
   <!-- Earth → Atlas intro (Google 3D, once per session) -->
   <div class="earth-intro" id="earth-intro" aria-hidden="true">
     <div class="earth-intro-copy">
-      <div class="earth-intro-eyebrow">Travel diary</div>
-      <h2>Every mile, on the real Earth.</h2>
+      <div class="earth-intro-eyebrow">My Mile Diary</div>
+      <h2>Every mile, on Earth.</h2>
       <p><span id="earth-intro-miles">—</span> miles · <span id="earth-intro-trips">—</span> journeys</p>
     </div>
     <button type="button" class="earth-intro-skip" id="earth-intro-skip">Skip</button>
@@ -156,10 +180,14 @@
   </div>
 
   <div class="cinema-title" id="cinema-title">
+    <div class="cinema-title-kicker" id="cinema-title-kicker">My Mile Diary</div>
     <h2 id="cinema-title-text"></h2>
     <div class="cinema-stats" id="cinema-stats" hidden></div>
     <p id="cinema-subtitle"></p>
     <div class="cinema-highlights" id="cinema-highlights"></div>
+    <button type="button" class="cinema-title-play" id="cinema-title-play" aria-label="Play" hidden>
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
+    </button>
     <div class="cinema-actions" id="cinema-actions" hidden>
       <button type="button" class="btn gold" id="cinema-back-atlas">Back to Atlas</button>
       <button type="button" class="btn" id="cinema-replay">Replay</button>
@@ -184,7 +212,7 @@
       <div class="trip-focus-actions">
         <button type="button" class="trip-focus-play" id="trip-focus-play" aria-label="Play this journey">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
-          Play journey
+          Play
         </button>
         <button type="button" class="trip-focus-highlights" id="trip-focus-highlights" hidden aria-label="Watch highlights — start at first memory, faster between chapters">
           Highlights
@@ -272,8 +300,8 @@
     <div class="journey-browser-panel">
       <header class="journey-browser-head">
         <div>
-          <div class="eyebrow">Travel diary</div>
-          <h2 id="browser-title">Your journeys</h2>
+          <div class="eyebrow">My Mile Diary</div>
+          <h2 id="browser-title">Journeys</h2>
           <div class="sub" id="panel-sub"><span id="panel-trip-count">—</span> trips · — miles</div>
         </div>
         <button type="button" class="journey-browser-close" id="journey-browser-close" aria-label="Close">×</button>
