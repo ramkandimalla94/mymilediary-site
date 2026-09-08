@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./assets/index-NzAcifV2.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BbwrMuFZ.css">
+  <script type="module" crossorigin src="./assets/index-C2ESdfst.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BlXutZWN.css">
 </head>
 <body class="studio-ui mock-b">
 
@@ -23,21 +23,21 @@
     <button class="btn primary" id="token-submit" style="padding:12px 32px">Launch Map</button>
   </div>
 
-  <!-- First-visit welcome — full-bleed Apple-style hero over the live map -->
+  <!-- Welcome card kept for ?welcome=1 / deploy copy — default home skips it -->
   <div id="onboarding" aria-hidden="true">
     <div class="onboard-card">
       <div class="onboard-brand" aria-hidden="true">My <em>Mile</em> Diary</div>
-      <div class="onboard-eyebrow">Travel, replayed</div>
+      <div class="onboard-eyebrow">Your travel diary</div>
       <h2>Your roads.<br>Your photos.<br>One film.</h2>
-      <p>Follow the exact route. Pause on every memory.</p>
+      <p>Every mile on one map. Open a journey when you want to watch.</p>
       <ul class="onboard-beats" hidden>
         <li><span id="onboard-trip-count">—</span> journeys</li>
       </ul>
       <div class="onboard-actions">
         <button class="btn onboard-primary" id="onboard-featured">Open a journey</button>
-        <button class="btn onboard-ghost" id="onboard-dismiss">Explore the map</button>
+        <button class="btn onboard-ghost" id="onboard-dismiss">Stay on the map</button>
       </div>
-      <div class="onboard-foot">Shown once</div>
+      <div class="onboard-foot">Optional preview</div>
     </div>
   </div>
 
@@ -62,28 +62,30 @@
     <div class="cinema-letterbox-bar is-bot"></div>
   </div>
 
-  <!-- Mock B — Streaming atlas catalog (home) -->
-  <section class="cinema-catalog" id="cinema-catalog" aria-label="Journey catalog" hidden>
-    <div class="cinema-featured" id="cinema-featured">
+  <!-- Atlas chrome — map is the diary; Journeys opens the trip sheet -->
+  <section class="cinema-catalog atlas-invite" id="cinema-catalog" aria-label="Atlas" hidden>
+    <div class="cinema-featured" id="cinema-featured" hidden>
       <div class="cinema-featured-bg" id="cinema-featured-bg" aria-hidden="true"></div>
       <div class="cinema-featured-shade" aria-hidden="true"></div>
       <div class="cinema-featured-copy">
-        <div class="cinema-featured-kicker">Featured journey</div>
+        <div class="cinema-featured-kicker">Start here</div>
         <h2 class="cinema-featured-title" id="cinema-featured-title">—</h2>
         <p class="cinema-featured-meta" id="cinema-featured-meta">—</p>
         <div class="cinema-featured-actions">
           <button type="button" class="cinema-play-btn" id="cinema-featured-play">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
-            Play
+            Watch
           </button>
-          <button type="button" class="cinema-info-btn" id="cinema-featured-open">Open</button>
+          <button type="button" class="cinema-info-btn" id="cinema-featured-open">Open map</button>
         </div>
       </div>
     </div>
-    <div class="cinema-row">
+    <div class="atlas-journeys-fab">
+      <button type="button" class="cinema-browse-btn" id="cinema-browse-btn">All Journeys</button>
+    </div>
+    <div class="cinema-row" hidden aria-hidden="true">
       <div class="cinema-row-head">
         <div class="cinema-row-label">Journeys</div>
-        <button type="button" class="cinema-browse-btn" id="cinema-browse-btn">All Journeys</button>
       </div>
       <div class="cinema-poster-row" id="cinema-poster-row" role="list"></div>
     </div>
