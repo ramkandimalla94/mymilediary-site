@@ -4,41 +4,27 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>My Mile Diary</title>
+  <meta name="description" content="Every road trip as a film: the mapped route, the photos where they were taken, played back over Photorealistic 3D.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='42' fill='%23000'/><circle cx='50' cy='50' r='18' fill='none' stroke='%230A84FF' stroke-width='6'/></svg>">
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
+  <!-- Atlas data starts downloading while the JS bundle is still parsing. -->
+  <link rel="preload" href="./data/index.json" as="fetch" crossorigin="anonymous">
+  <link rel="preconnect" href="https://maps.googleapis.com">
+  <link rel="preconnect" href="https://api.mapbox.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./assets/index-C2ESdfst.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BlXutZWN.css">
+  <script type="module" crossorigin src="./assets/index-BFrJBEdj.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BfnQN6lY.css">
 </head>
 <body class="studio-ui mock-b">
 
-  <!-- Token gate (shown when no token baked in at build time) -->
-  <div id="token-gate">
-    <div class="logo" style="font-size:42px;margin-bottom:12px;font-family:var(--font-brand)">My Mile Diary</div>
-    <h2>Mapbox Token Required</h2>
-    <p>Paste your free <a href="https://account.mapbox.com/access-tokens/" target="_blank" rel="noopener">Mapbox public token</a> to load satellite terrain. Stored locally in your browser only.</p>
-    <input type="password" id="token-input" placeholder="pk.eyJ..." autocomplete="off">
-    <button class="btn primary" id="token-submit" style="padding:12px 32px">Launch Map</button>
-  </div>
-
-  <!-- Welcome card kept for ?welcome=1 / deploy copy — default home skips it -->
-  <div id="onboarding" aria-hidden="true">
-    <div class="onboard-card">
-      <div class="onboard-brand" aria-hidden="true">My <em>Mile</em> Diary</div>
-      <div class="onboard-eyebrow">Your travel diary</div>
-      <h2>Your roads.<br>Your photos.<br>One film.</h2>
-      <p>Every mile on one map. Open a journey when you want to watch.</p>
-      <ul class="onboard-beats" hidden>
-        <li><span id="onboard-trip-count">—</span> journeys</li>
-      </ul>
-      <div class="onboard-actions">
-        <button class="btn onboard-primary" id="onboard-featured">Open a journey</button>
-        <button class="btn onboard-ghost" id="onboard-dismiss">Stay on the map</button>
-      </div>
-      <div class="onboard-foot">Optional preview</div>
-    </div>
+  <!-- Boot failure (index.json unreachable) — the only pre-map screen besides the splash -->
+  <div id="boot-error" class="boot-error" role="alert" hidden>
+    <div class="boot-error-brand">My <em>Mile</em> Diary</div>
+    <h2>Could not load the journeys</h2>
+    <p id="boot-error-detail">Check your connection and reload.</p>
+    <button type="button" class="btn primary" id="boot-error-retry">Reload</button>
   </div>
 
   <!-- Splash -->
@@ -56,40 +42,11 @@
     <div class="map-stars" aria-hidden="true"></div>
   </div>
 
-  <!-- Mock B — Cinema letterbox (Watch) -->
+  <!-- Cinema letterbox (Watch) -->
   <div class="cinema-letterbox" id="cinema-letterbox" aria-hidden="true">
     <div class="cinema-letterbox-bar is-top"></div>
     <div class="cinema-letterbox-bar is-bot"></div>
   </div>
-
-  <!-- Atlas chrome — map is the diary; Journeys opens the trip sheet -->
-  <section class="cinema-catalog atlas-invite" id="cinema-catalog" aria-label="Atlas" hidden>
-    <div class="cinema-featured" id="cinema-featured" hidden>
-      <div class="cinema-featured-bg" id="cinema-featured-bg" aria-hidden="true"></div>
-      <div class="cinema-featured-shade" aria-hidden="true"></div>
-      <div class="cinema-featured-copy">
-        <div class="cinema-featured-kicker">Start here</div>
-        <h2 class="cinema-featured-title" id="cinema-featured-title">—</h2>
-        <p class="cinema-featured-meta" id="cinema-featured-meta">—</p>
-        <div class="cinema-featured-actions">
-          <button type="button" class="cinema-play-btn" id="cinema-featured-play">
-            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
-            Watch
-          </button>
-          <button type="button" class="cinema-info-btn" id="cinema-featured-open">Open map</button>
-        </div>
-      </div>
-    </div>
-    <div class="atlas-journeys-fab">
-      <button type="button" class="cinema-browse-btn" id="cinema-browse-btn">All Journeys</button>
-    </div>
-    <div class="cinema-row" hidden aria-hidden="true">
-      <div class="cinema-row-head">
-        <div class="cinema-row-label">Journeys</div>
-      </div>
-      <div class="cinema-poster-row" id="cinema-poster-row" role="list"></div>
-    </div>
-  </section>
 
   <!-- Earth → Atlas intro (Google 3D, once per session) -->
   <div class="earth-intro" id="earth-intro" aria-hidden="true">
@@ -104,6 +61,11 @@
   <!-- Honest renderer badge — only when the 3D scene could not start -->
   <div class="map-mode-badge" id="map-mode-badge" role="status">2D mode · 3D needs hardware WebGL</div>
   <div class="watch-loading-veil" id="watch-loading-veil" aria-hidden="true"><span>Rendering Earth…</span></div>
+  <!-- Sustained tile starvation (BufferGovernor hysteresis): the car eases off, the pill says why -->
+  <div class="watch-buffering" id="watch-buffering" role="status" aria-live="polite" hidden>
+    <span class="watch-buffering-spin" aria-hidden="true"></span>
+    <span>Loading map…</span>
+  </div>
 
   <div class="photo-hover" id="photo-hover" aria-hidden="true">
     <img id="photo-hover-img" alt="">
@@ -123,30 +85,35 @@
     <div class="cap"><strong id="memory-card-title">Memory</strong><span id="memory-card-meta"></span></div>
   </div>
 
-  <!-- Top bar (home / trip-focus) -->
+  <!-- Top bar (home / trip focus) -->
   <header class="top-bar">
-    <button type="button" class="brand" id="brand-home" aria-label="Back to Atlas — all routes">My <span>Mile</span> Diary</button>
-    <div class="stat-rail">
-      <div class="stat-chip">—<strong>mi</strong></div>
-      <div class="stat-chip"><span id="stat-places">—</span><strong>places</strong></div>
-      <div class="stat-chip"><span id="stat-photos">—</span><strong>photos</strong></div>
-      <div class="stat-chip"><span id="stat-days">—</span><strong>days</strong></div>
-    </div>
+    <button type="button" class="brand" id="brand-home" aria-label="Home — all journeys">My <span>Mile</span> Diary</button>
   </header>
+
+  <!-- Home · journey shelf — every film on one row, newest first -->
+  <section class="journey-shelf" id="journey-shelf" aria-label="Journeys">
+    <div class="journey-shelf-head">
+      <span class="journey-shelf-title">Your <em>journeys</em></span>
+      <button type="button" class="journey-shelf-all" id="journey-shelf-all" aria-haspopup="dialog" aria-controls="journey-browser">
+        All journeys <span class="count" id="journey-shelf-count">—</span>
+      </button>
+    </div>
+    <div class="journey-shelf-track" id="journey-shelf-track" role="list"></div>
+  </section>
 
   <!-- Watch HUD — header pills on top; timestamp + commentary below -->
   <div class="watch-hud" id="watch-hud" aria-hidden="true">
     <div class="watch-hud-row">
-      <button type="button" class="watch-brand-pill" id="watch-brand" aria-label="Back to Atlas">
+      <button type="button" class="watch-brand-pill" id="watch-brand" aria-label="Home — all journeys">
         <span class="watch-brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none"><path d="M3 18L9 8l3.5 5.5L16 9l5 9H3z" fill="currentColor"/><path d="M12 4l2.2 3.8H9.8L12 4z" fill="currentColor" opacity=".7"/></svg>
         </span>
         <span class="watch-brand-text">My <em>Mile</em> Diary</span>
       </button>
-      <div class="watch-meta-pill" id="watch-meta-pill" role="status">Jul 2026 · Bellevue → Olympic · — mi</div>
+      <div class="watch-meta-pill" id="watch-meta-pill" role="status">—</div>
       <button type="button" class="watch-place-pill" id="watch-place-pill" aria-label="Current place">
         <span class="watch-place-dot" aria-hidden="true"></span>
-        <span id="watch-place-label">Olympic Peninsula</span>
+        <span id="watch-place-label">Journey</span>
         <svg class="watch-place-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
       </button>
     </div>
@@ -163,24 +130,7 @@
 
   <div class="trip-clock" id="trip-clock" aria-live="off"></div>
 
-  <!-- Mobile journey preview (opens from path thumbnail tap) -->
-  <section class="mobile-swipe" id="mobile-swipe" aria-label="Journey preview" hidden>
-    <button type="button" class="mobile-swipe-icon-btn" id="mobile-swipe-menu" aria-label="Open journey list">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-    </button>
-    <button type="button" class="mobile-swipe-icon-btn mobile-swipe-filter" id="mobile-swipe-filter" aria-label="Filter era">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M7 12h10M10 18h4"/></svg>
-    </button>
-    <button type="button" class="mobile-preview-backdrop" id="mobile-preview-backdrop" aria-label="Close preview" hidden></button>
-    <div class="mobile-swipe-stack" id="mobile-swipe-stack" hidden></div>
-  </section>
-
-  <div class="story-overlay" id="story-overlay">
-    <div class="story-caption" id="story-caption"></div>
-    <div class="story-sub" id="story-sub"></div>
-    <div class="story-pois" id="story-pois"></div>
-  </div>
-
+  <!-- Title card (Watch intro) doubles as the End card (journey complete) -->
   <div class="cinema-title" id="cinema-title">
     <div class="cinema-title-kicker" id="cinema-title-kicker">My Mile Diary</div>
     <h2 id="cinema-title-text"></h2>
@@ -191,27 +141,41 @@
       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
     </button>
     <div class="cinema-actions" id="cinema-actions" hidden>
-      <button type="button" class="btn gold" id="cinema-back-atlas">Back to Atlas</button>
       <button type="button" class="btn" id="cinema-replay">Replay</button>
-      <button type="button" class="btn" id="cinema-next">Next journey</button>
+      <button type="button" class="btn primary" id="cinema-next">Next journey <span class="btn-count" id="cinema-next-count"></span></button>
+      <button type="button" class="btn" id="cinema-back-atlas">Home</button>
       <button type="button" class="btn" id="cinema-share">Share</button>
     </div>
+    <div class="cinema-end-foot" id="cinema-end-foot" aria-live="polite"></div>
   </div>
-  <div class="watch-esc-hint" id="watch-esc-hint" hidden>Esc — pause · Esc again — leave Watch · tap My Mile Diary for Atlas</div>
-  <div class="export-status" id="export-status">Recording…</div>
+  <div class="watch-esc-hint" id="watch-esc-hint" hidden>Esc — pause · Esc again — leave Watch · tap My Mile Diary for Home</div>
   <div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
 
-  <!-- Trip focus card — compact stats when a journey is selected -->
-  <aside class="trip-focus-card" id="trip-focus-card" aria-label="Selected journey">
-    <div class="trip-hero" id="hero-card">
-      <div class="trip-hero-name" id="hero-name">Overview</div>
-      <div class="trip-hero-via" id="hero-via">Choose a journey to begin cinematic playback.</div>
-      <div class="hero-memory-badge" id="hero-memory-badge" hidden></div>
-      <div class="metric-grid">
+  <!-- Focus · trip panel — side panel on wide screens, bottom sheet on phones -->
+  <aside class="trip-panel" id="trip-panel" aria-label="Selected journey">
+    <header class="trip-panel-bar">
+      <button type="button" class="trip-panel-back" id="trip-panel-back" aria-label="Back to all journeys">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+        Home
+      </button>
+      <button type="button" class="trip-panel-share" id="trip-panel-share" aria-label="Copy a link to this journey">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1 1"/><path d="M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1-1"/></svg>
+        Share
+      </button>
+    </header>
+    <div class="trip-panel-body" id="hero-card">
+      <div class="trip-panel-kicker" id="hero-kicker">—</div>
+      <h2 class="trip-panel-title" id="hero-name">—</h2>
+      <p class="trip-panel-via" id="hero-via"></p>
+      <div class="trip-panel-badges">
+        <span class="trip-panel-badge is-gold" id="hero-memory-badge" hidden></span>
+      </div>
+      <div class="trip-panel-stats">
         <div class="metric"><span class="val" id="hero-miles">—</span><span class="lbl">Miles</span></div>
         <div class="metric"><span class="val" id="hero-days">—</span><span class="lbl">Days</span></div>
+        <div class="metric"><span class="val" id="hero-photos">—</span><span class="lbl">Memories</span></div>
       </div>
-      <div class="trip-focus-actions">
+      <div class="trip-panel-actions">
         <button type="button" class="trip-focus-play" id="trip-focus-play" aria-label="Play this journey">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
           Play
@@ -220,26 +184,10 @@
           Highlights
         </button>
       </div>
+      <div class="trip-panel-runtime" id="hero-runtime"></div>
+      <div class="filmstrip" id="trip-filmstrip" aria-label="Trip photos"></div>
     </div>
-    <div class="filmstrip" id="trip-filmstrip" aria-label="Trip photos"></div>
   </aside>
-
-  <!-- Compact journey dock — Journeys + atlas film rail (home) / Atlas (trip-focus) -->
-  <nav class="journey-dock" id="journey-dock" aria-label="Journey picker">
-    <button type="button" class="journey-dock-box journey-open-btn" id="journey-open-btn" aria-haspopup="dialog" aria-controls="journey-browser">
-      <svg class="journey-open-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-        <path d="M8 4l-5 2.5v13l5-2.5 8 2.5 5-2.5V4l-5 2.5L8 4z"/>
-        <path d="M8 4v13M16 6.5v13"/>
-      </svg>
-      <span class="journey-open-label" id="journey-open-label">Journeys</span>
-      <span class="journey-open-badge" id="journey-open-badge">—</span>
-    </button>
-    <div class="atlas-film-rail" id="atlas-film-rail" hidden aria-label="Journey film strip">
-      <div class="atlas-film-track" id="atlas-film-track" role="list"></div>
-    </div>
-    <div class="journey-quick-rail" id="journey-quick-rail" aria-label="Quick journey picks" hidden></div>
-    <button type="button" class="journey-dock-box journey-atlas-btn" id="journey-atlas-btn" hidden aria-label="Back to Atlas">Atlas</button>
-  </nav>
 
   <!-- Cinema Rail — Watch transport: hairline timeline with chapters + auto-hiding controls -->
   <div class="watch-transport cinema-rail" id="watch-transport" aria-hidden="true">
@@ -275,8 +223,9 @@
       <button type="button" class="rail-highlights-btn" id="btn-highlights-watch" title="Highlights — faster travel between memories" aria-pressed="false" aria-label="Highlights reel">
         Highlights
       </button>
-      <div class="speed-rail watch-speed-rail" id="speed-rail" title="Playback speed">
+      <div class="speed-rail watch-speed-rail" id="speed-rail" title="Playback speed (&lt; &gt; presets · [ ] fine)">
         <label for="speed">Speed</label>
+        <div class="speed-presets" id="speed-presets" role="group" aria-label="Speed presets"></div>
         <input type="range" id="speed" min="0.25" max="4" step="0.05" value="1" aria-valuemin="0.25" aria-valuemax="4" aria-label="Playback speed">
         <span id="speed-label" class="speed-val">1×</span>
       </div>
@@ -292,11 +241,8 @@
     </div>
     <div class="rail-hint" id="rail-hint" aria-hidden="true">Move to show controls · Space pause · ← → moments · Tab chapters</div>
   </div>
-  <div class="watch-progress-line" id="watch-progress-line" aria-hidden="true">
-    <span class="watch-progress-dot" id="watch-progress-dot"></span>
-  </div>
 
-  <!-- Full journey browser modal -->
+  <!-- Journeys sheet — the full list, grouped by year -->
   <div class="journey-browser" id="journey-browser" hidden role="dialog" aria-modal="true" aria-labelledby="browser-title">
     <button type="button" class="journey-browser-backdrop" id="journey-browser-backdrop" aria-label="Close journey browser"></button>
     <div class="journey-browser-panel">
@@ -308,37 +254,16 @@
         </div>
         <button type="button" class="journey-browser-close" id="journey-browser-close" aria-label="Close">×</button>
       </header>
-      <nav class="browser-dest-rail" id="browser-dest-rail" aria-label="Browse by destination" hidden></nav>
       <div class="trip-scroll" id="trip-list">
-        <div class="group-label">Map</div>
-        <div class="trip-item active" data-id="all">
+        <button type="button" class="trip-item active" data-id="all">
           <div class="trip-swatch" style="background:linear-gradient(180deg,#64748b,#94a3b8)"></div>
           <div>
             <div class="trip-name">All journeys</div>
-            <div class="trip-meta"><span id="stat-trip-count">—</span> trips · — mi</div>
+            <div class="trip-meta">— trips · — mi</div>
           </div>
-        </div>
-        <div class="group-label">Journeys</div>
+        </button>
         <div id="trip-list-items"></div>
       </div>
-    </div>
-  </div>
-
-  <!-- Master timeline removed from UI (owner: wasted space). Keep DOM for legacy JS ids. -->
-  <div class="timeline-bar" hidden aria-hidden="true">
-    <div class="timeline-head">
-      <div class="timeline-label" id="timeline-label">Journey Timeline · 2023 — 2026</div>
-      <div class="era-rail" id="era-rail" role="group" aria-label="Filter journeys by year">
-        <span class="era-rail-label">Era</span>
-        <button type="button" class="era-chip active" data-year="all">All</button>
-        
-        <button type="button" class="era-chip" data-year="—">—</button>
-        
-      </div>
-    </div>
-    <div class="timeline-track" id="timeline-track">
-      
-      <div class="timeline-scrub" id="timeline-scrub" style="left:0%"></div>
     </div>
   </div>
 
