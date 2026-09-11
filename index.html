@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./assets/index-ObLXWlSZ.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-D-NRcUXI.css">
+  <script type="module" crossorigin src="./assets/index-DHjKSItR.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BqGiBWP0.css">
 </head>
 <body class="studio-ui mock-b">
 
@@ -29,7 +29,7 @@
 
   <!-- Splash -->
   <div id="splash">
-    <div class="brand-mark">My Mile Diary</div>
+    <div class="brand-mark">My <em>Mile</em> Diary</div>
     <h1>Miles,<br>as cinema.</h1>
     <p><span id="stat-trip-count">—</span> journeys ready to watch</p>
     <div class="splash-bar"><div class="splash-fill" id="splash-fill"></div></div>
@@ -93,7 +93,10 @@
   <!-- Home · journey shelf — every film on one row, newest first -->
   <section class="journey-shelf" id="journey-shelf" aria-label="Journeys">
     <div class="journey-shelf-head">
-      <span class="journey-shelf-title">Your <em>journeys</em></span>
+      <div class="journey-shelf-heading">
+        <span class="journey-shelf-eyebrow">Road films</span>
+        <span class="journey-shelf-title">Your <em>journeys</em></span>
+      </div>
       <button type="button" class="journey-shelf-all" id="journey-shelf-all" aria-haspopup="dialog" aria-controls="journey-browser">
         All journeys <span class="count" id="journey-shelf-count">—</span>
       </button>
@@ -148,11 +151,15 @@
     </div>
     <div class="cinema-end-foot" id="cinema-end-foot" aria-live="polite"></div>
   </div>
-  <div class="watch-esc-hint" id="watch-esc-hint" hidden>Esc — pause · Esc again — leave Watch · tap My Mile Diary for Home</div>
+  <div class="watch-esc-hint" id="watch-esc-hint" hidden>Esc pauses · Esc again leaves Watch · tap My Mile Diary for Home</div>
   <div class="share-toast" id="share-toast" role="status" aria-live="polite"></div>
 
   <!-- Focus · trip panel — side panel on wide screens, bottom sheet on phones -->
   <aside class="trip-panel" id="trip-panel" aria-label="Selected journey">
+    <div class="trip-panel-cover" id="trip-panel-cover" hidden>
+      <img id="trip-panel-cover-img" alt="">
+      <div class="trip-panel-cover-fade" aria-hidden="true"></div>
+    </div>
     <header class="trip-panel-bar">
       <button type="button" class="trip-panel-back" id="trip-panel-back" aria-label="Back to all journeys">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
@@ -242,7 +249,7 @@
       <span class="rail-legend-swatch is-charge" aria-hidden="true"></span><span>Long stop</span>
       <button type="button" class="rail-legend-dismiss" id="rail-legend-dismiss">Got it</button>
     </div>
-    <div class="rail-hint" id="rail-hint" aria-hidden="true">Drag to look around · Recenter resumes chase · Space pause · ← → moments</div>
+    <div class="rail-hint" id="rail-hint" aria-hidden="true">Drag to look around · Recenter resumes chase · Space pauses · ← → moments</div>
   </div>
 
   <!-- Journeys sheet — the full list, grouped by year -->
@@ -251,7 +258,7 @@
     <div class="journey-browser-panel">
       <header class="journey-browser-head">
         <div>
-          <div class="eyebrow">My Mile Diary</div>
+          <div class="eyebrow">My <em>Mile</em> Diary</div>
           <h2 id="browser-title">Journeys</h2>
           <div class="sub" id="panel-sub"><span id="panel-trip-count">—</span> trips · — miles</div>
         </div>
