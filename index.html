@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./assets/index-DbEOuL-f.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CRaCo-9w.css">
+  <script type="module" crossorigin src="./assets/index-lNOvZ6oO.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BxFa1ETV.css">
 </head>
 <body class="studio-ui mock-b">
 
@@ -51,6 +51,7 @@
   <!-- The journey is a light on the road. Not a car, not a letter, not a floating arrow. -->
   <div id="travel-cue" class="travel-cue" hidden aria-hidden="true">
     <div class="journey-light" aria-hidden="true">
+      <span class="journey-light-column"></span>
       <span class="journey-light-wake"></span>
       <span class="journey-light-halo"></span>
       <span class="journey-light-core"></span>
@@ -84,11 +85,23 @@
   <div class="memory-backdrop" id="memory-backdrop" hidden aria-hidden="true"></div>
   <div class="memory-stage" id="memory-stage" aria-hidden="true" role="dialog" aria-label="Photo memory">
     <button type="button" class="memory-stage-close" id="memory-stage-close" aria-label="Close photo">×</button>
-    <img id="memory-stage-img" alt="">
-    <video id="memory-stage-video" muted playsinline loop preload="metadata" hidden></video>
-    <div class="memory-stage-cap">
-      <strong id="memory-stage-title">Memory</strong>
-      <span id="memory-stage-meta"></span>
+    <div class="memory-frame">
+      <img id="memory-stage-img" class="memory-still" alt="">
+      <img id="memory-stage-img-b" class="memory-still" alt="">
+      <video id="memory-stage-video" muted playsinline loop preload="metadata" hidden></video>
+      <span class="memory-flash" aria-hidden="true"></span>
+      <span class="memory-sweep" aria-hidden="true"></span>
+      <span class="memory-grain" aria-hidden="true"></span>
+      <div class="memory-index" id="memory-stage-index" hidden>
+        <span id="memory-stage-index-n"></span>
+        <span id="memory-stage-index-of"></span>
+      </div>
+      <div class="memory-stage-cap">
+        <span class="memory-rule" aria-hidden="true"></span>
+        <span class="memory-kicker" id="memory-stage-kicker"></span>
+        <strong id="memory-stage-title">Memory</strong>
+        <span id="memory-stage-meta"></span>
+      </div>
     </div>
   </div>
   <div class="memory-card" id="memory-card" aria-hidden="true">
