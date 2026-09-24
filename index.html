@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>My Mile Diary</title>
-  <meta name="description" content="Every road trip as a film: the mapped route, the photos where they were taken, played back over Photorealistic 3D.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='8' fill='%23100E0C'/><rect x='22' y='22' width='56' height='56' fill='none' stroke='%23D4652F' stroke-width='6'/></svg>">
+  <meta name="description" content="Every road trip as a film. Replay the mapped route over Mapbox terrain or Google Photorealistic 3D.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2307090E'/><circle cx='50' cy='50' r='16' fill='%238EB6FF'/><circle cx='50' cy='50' r='6' fill='%23F4F0E6'/></svg>">
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
   <!-- Atlas data starts downloading while the JS bundle is still parsing. -->
   <link rel="preload" href="./data/index.json" as="fetch" crossorigin="anonymous">
@@ -13,9 +13,9 @@
   <link rel="preconnect" href="https://api.mapbox.com">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./assets/index-CK6v0TnL.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BmdXROgh.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <script type="module" crossorigin src="./assets/index-DbEOuL-f.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CRaCo-9w.css">
 </head>
 <body class="studio-ui mock-b">
 
@@ -30,7 +30,7 @@
   <!-- Splash -->
   <div id="splash">
     <div class="brand-mark">My <em>Mile</em> Diary</div>
-    <h1>The roads<br>you kept.</h1>
+    <h1>Mile<br>Diary.</h1>
     <p><span id="stat-trip-count">—</span> journeys ready to watch</p>
     <div class="splash-bar"><div class="splash-fill" id="splash-fill"></div></div>
   </div>
@@ -46,6 +46,16 @@
   <div class="cinema-letterbox" id="cinema-letterbox" aria-hidden="true">
     <div class="cinema-letterbox-bar is-top"></div>
     <div class="cinema-letterbox-bar is-bot"></div>
+  </div>
+
+  <!-- The journey is a light on the road. Not a car, not a letter, not a floating arrow. -->
+  <div id="travel-cue" class="travel-cue" hidden aria-hidden="true">
+    <div class="journey-light" aria-hidden="true">
+      <span class="journey-light-wake"></span>
+      <span class="journey-light-halo"></span>
+      <span class="journey-light-core"></span>
+    </div>
+    <span class="travel-cue-label" id="travel-cue-label">On the road</span>
   </div>
 
   <!-- Earth → Atlas intro (Google 3D, once per session) -->
@@ -88,15 +98,16 @@
 
   <!-- Top bar (home / trip focus) -->
   <header class="top-bar">
-    <button type="button" class="brand" id="brand-home" aria-label="Home — all journeys">My <span>Mile</span> Diary</button>
+    <button type="button" class="brand" id="brand-home" aria-label="Home — all journeys">My <span>Mile</span> Diary<span class="brand-miles" id="brand-miles"></span></button>
   </header>
 
   <!-- Home · journey shelf — every film on one row, newest first -->
   <section class="journey-shelf" id="journey-shelf" aria-label="Journeys">
     <div class="journey-shelf-head">
       <div class="journey-shelf-heading">
-        <span class="journey-shelf-eyebrow">A private atlas</span>
-        <span class="journey-shelf-title">Journeys</span>
+        <span class="journey-shelf-eyebrow">Follow the road</span>
+        <span class="journey-shelf-title" id="ledger-miles">—</span>
+        <span class="ledger-sub" id="ledger-sub"></span>
       </div>
       <button type="button" class="journey-shelf-all" id="journey-shelf-all" aria-haspopup="dialog" aria-controls="journey-browser">
         All journeys <span class="count" id="journey-shelf-count">—</span>
