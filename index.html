@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
-  <script type="module" crossorigin src="./assets/index-BSa7HYj_.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-BxFa1ETV.css">
+  <script type="module" crossorigin src="./assets/index-ClpQ4s19.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-1nOHkKdN.css">
 </head>
 <body class="studio-ui mock-b">
 
@@ -207,17 +207,37 @@
         <div class="metric"><span class="val" id="hero-days">—</span><span class="lbl">Days</span></div>
         <div class="metric"><span class="val" id="hero-photos">—</span><span class="lbl">Memories</span></div>
       </div>
+      <div class="trip-panel-runtime" id="hero-runtime"></div>
+      <div class="trip-chapters" id="trip-chapters" hidden aria-label="Jump to a moment"></div>
+      <div class="filmstrip" id="trip-filmstrip" aria-label="Trip photos"></div>
+    </div>
+    <div class="trip-panel-dock" id="trip-panel-dock">
+      <label class="place-search">
+        <input type="search" id="place-search" placeholder="Search places on this journey" autocomplete="off" enterkeyhint="search" aria-label="Search places on this journey" role="combobox" aria-autocomplete="list" aria-controls="place-search-hits" aria-expanded="false" disabled>
+      </label>
+      <div class="place-search-hits" id="place-search-hits" role="listbox" hidden></div>
+      <div class="trip-days" id="trip-days" hidden aria-label="Play a single day"></div>
+      <div class="start-here" id="start-here">
+        <span class="start-here-label" id="start-here-label">Starts at the beginning</span>
+        <button type="button" class="start-here-clear" id="start-here-clear" hidden>From start</button>
+      </div>
+      <div class="start-scrub">
+        <div class="start-ruler" id="start-ruler" hidden role="group" aria-label="Days along this journey"></div>
+        <input type="range" id="start-scrubber" min="0" max="1000" value="0" step="1" aria-label="Choose where this journey starts" disabled>
+      </div>
+      <div class="sheet-speed" id="sheet-speed">
+        <span class="sheet-speed-label">Speed</span>
+        <div class="speed-presets" id="sheet-speed-presets" role="group" aria-label="Playback speed"></div>
+      </div>
       <div class="trip-panel-actions">
         <button type="button" class="trip-focus-play" id="trip-focus-play" aria-label="Play this journey">
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7L8 5z"/></svg>
-          Play
+          <span class="trip-focus-play-label">Play</span>
         </button>
         <button type="button" class="trip-focus-highlights" id="trip-focus-highlights" hidden aria-label="Watch highlights — start at first memory, faster between chapters">
           Highlights
         </button>
       </div>
-      <div class="trip-panel-runtime" id="hero-runtime"></div>
-      <div class="filmstrip" id="trip-filmstrip" aria-label="Trip photos"></div>
     </div>
   </aside>
 
