@@ -1,3 +1,4 @@
+import "./css-boot.js";
 const __jp = 14;
 const __dp = 24;
 const __base = new URL("./", import.meta.url).href;
