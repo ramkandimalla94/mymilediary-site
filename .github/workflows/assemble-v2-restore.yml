@@ -11,18 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Assemble real Vite bundles
+      - name: Fetch staged Vite bundles
         run: |
           set -euo pipefail
           test -f assets/_restore/READY
-          ls -la assets/_restore/css/ assets/_restore/js/ assets/_restore/data/
-          cat assets/_restore/css/* > assets/index-BSI9EAX6.css
-          cat assets/_restore/js/* > assets/index-B62bK7Wg.js
-          cat assets/_restore/data/* > data/index.json
+          BASE="https://raw.githubusercontent.com/ramkandimalla94/mmd-restore-staging/main"
+          curl -fsSL "$BASE/assets-index-BSI9EAX6.css" -o assets/index-BSI9EAX6.css
+          curl -fsSL "$BASE/assets-index-B62bK7Wg.js" -o assets/index-B62bK7Wg.js
+          curl -fsSL "$BASE/data-index.json" -o data/index.json
           echo "85d77b82dda9f5771db744ee12008982  assets/index-BSI9EAX6.css" | md5sum -c -
           echo "ff52f760c79bb8b21f2c3d52fdd2ebd2  assets/index-B62bK7Wg.js" | md5sum -c -
           echo "6ad5c7e8f5c65b0f1ef4f72b321b9e4a  data/index.json" | md5sum -c -
-          # verify markers
           grep -q 'body.booth' assets/index-BSI9EAX6.css
           grep -q 'google-2d-fallback' assets/index-B62bK7Wg.js || grep -q 'Map3D' assets/index-B62bK7Wg.js
           rm -rf assets/_restore assets/_restore_ping.txt
@@ -33,5 +32,5 @@ jobs:
           git config user.email "37137053+ramkandimalla94@users.noreply.github.com"
           git add -A
           git diff --cached --quiet && echo "nothing to commit" && exit 0
-          git commit -m "fix: assemble real Vite JS/CSS/data from restore parts (d43cd66)"
+          git commit -m "fix: assemble real Vite JS/CSS/data from staging (d43cd66)"
           git push
