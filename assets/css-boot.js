@@ -1,5 +1,5 @@
 (async()=>{
-const names=["css.gz.hex.0","css.gz.hex.1","css.gz.hex.2","css.gz.hex.3a","css.gz.hex.3b","css.gz.hex.4","css.gz.hex.5","css.gz.hex.6","css.gz.hex.7","css.gz.hex.8","css.gz.hex.9","css.gz.hex.10","css.gz.hex.11","css.gz.hex.12","css.gz.hex.13","css.gz.hex.14","css.gz.hex.15","css.gz.hex.16","css.gz.hex.17","css.gz.hex.18","css.gz.hex.19","css.gz.hex.20"];
+const names=["css.gz.hex.0","css.gz.hex.1","css.gz.hex.2","css.gz.hex.3a","css.gz.hex.3b","css.gz.hex.4a","css.gz.hex.4b","css.gz.hex.5a","css.gz.hex.5b","css.gz.hex.6a","css.gz.hex.6b","css.gz.hex.7a","css.gz.hex.7b","css.gz.hex.8a","css.gz.hex.8b","css.gz.hex.9a","css.gz.hex.9b","css.gz.hex.10a","css.gz.hex.10b","css.gz.hex.11a","css.gz.hex.11b","css.gz.hex.12a","css.gz.hex.12b","css.gz.hex.13a","css.gz.hex.13b","css.gz.hex.14a","css.gz.hex.14b","css.gz.hex.15a","css.gz.hex.15b","css.gz.hex.16a","css.gz.hex.16b","css.gz.hex.17a","css.gz.hex.17b","css.gz.hex.18a","css.gz.hex.18b","css.gz.hex.19a","css.gz.hex.19b","css.gz.hex.20a","css.gz.hex.20b"];
 const hex=(await Promise.all(names.map(n=>fetch(new URL('./'+n, import.meta.url)).then(r=>{if(!r.ok)throw new Error(n);return r.text()})))).join('').replace(/\s+/g,'');
 const bin=new Uint8Array(hex.length/2);
 for(let i=0;i<bin.length;i++) bin[i]=parseInt(hex.substr(i*2,2),16);
