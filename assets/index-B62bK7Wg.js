@@ -1,19 +1,11 @@
-import "./css-boot.js";
-const __jp = 14;
-const __dp = 24;
-const __base = new URL("./", import.meta.url).href;
-const __texts = await Promise.all(
-  Array.from({length: __jp}, (_, i) =>
-    fetch(new URL(`./index-B62bK7Wg.p${i}.js`, import.meta.url)).then(r => {
-      if (!r.ok) throw new Error("missing js part " + i);
-      return r.text();
-    })
-  )
-);
-let __code = __texts.join("");
-__code = __code.split('import("./maps3d-mock-1NReV1b1.js")').join('import("' + __base + 'maps3d-mock-1NReV1b1.js")');
-const __repl =
-  '(async()=>{const ps=await Promise.all(Array.from({length:' + __dp + '},(_,i)=>fetch(`${Dm}index.json.p${i}`).then(r=>r.text())));return new Response(ps.join(""),{status:200,headers:{"Content-Type":"application/json"}});})()';
-__code = __code.split('fetch(`${Dm}index.json`)').join(__repl);
-const __blob = new Blob([__code], {type: "text/javascript"});
-await import(URL.createObjectURL(__blob));
+import './css-boot.js';
+(async()=>{
+const names=["js.gz.hex.0", "js.gz.hex.1", "js.gz.hex.2", "js.gz.hex.3", "js.gz.hex.4", "js.gz.hex.5", "js.gz.hex.6", "js.gz.hex.7", "js.gz.hex.8", "js.gz.hex.9", "js.gz.hex.10", "js.gz.hex.11", "js.gz.hex.12", "js.gz.hex.13", "js.gz.hex.14", "js.gz.hex.15", "js.gz.hex.16", "js.gz.hex.17", "js.gz.hex.18", "js.gz.hex.19", "js.gz.hex.20", "js.gz.hex.21", "js.gz.hex.22", "js.gz.hex.23", "js.gz.hex.24", "js.gz.hex.25", "js.gz.hex.26", "js.gz.hex.27", "js.gz.hex.28", "js.gz.hex.29", "js.gz.hex.30", "js.gz.hex.31", "js.gz.hex.32", "js.gz.hex.33", "js.gz.hex.34", "js.gz.hex.35", "js.gz.hex.36", "js.gz.hex.37", "js.gz.hex.38", "js.gz.hex.39", "js.gz.hex.40", "js.gz.hex.41", "js.gz.hex.42", "js.gz.hex.43", "js.gz.hex.44", "js.gz.hex.45", "js.gz.hex.46", "js.gz.hex.47", "js.gz.hex.48", "js.gz.hex.49", "js.gz.hex.50", "js.gz.hex.51", "js.gz.hex.52", "js.gz.hex.53", "js.gz.hex.54", "js.gz.hex.55", "js.gz.hex.56", "js.gz.hex.57", "js.gz.hex.58", "js.gz.hex.59", "js.gz.hex.60", "js.gz.hex.61", "js.gz.hex.62", "js.gz.hex.63", "js.gz.hex.64", "js.gz.hex.65", "js.gz.hex.66", "js.gz.hex.67", "js.gz.hex.68", "js.gz.hex.69", "js.gz.hex.70", "js.gz.hex.71", "js.gz.hex.72", "js.gz.hex.73", "js.gz.hex.74", "js.gz.hex.75", "js.gz.hex.76", "js.gz.hex.77", "js.gz.hex.78", "js.gz.hex.79", "js.gz.hex.80", "js.gz.hex.81", "js.gz.hex.82", "js.gz.hex.83", "js.gz.hex.84", "js.gz.hex.85", "js.gz.hex.86", "js.gz.hex.87", "js.gz.hex.88", "js.gz.hex.89", "js.gz.hex.90", "js.gz.hex.91", "js.gz.hex.92", "js.gz.hex.93", "js.gz.hex.94", "js.gz.hex.95", "js.gz.hex.96", "js.gz.hex.97", "js.gz.hex.98", "js.gz.hex.99", "js.gz.hex.100", "js.gz.hex.101", "js.gz.hex.102", "js.gz.hex.103", "js.gz.hex.104", "js.gz.hex.105", "js.gz.hex.106"];
+const hex=(await Promise.all(names.map(n=>fetch(new URL('./'+n, import.meta.url)).then(r=>{if(!r.ok)throw new Error(n);return r.text()})))).join('').replace(/\s+/g,'');
+const bin=new Uint8Array(hex.length/2);
+for(let i=0;i<bin.length;i++) bin[i]=parseInt(hex.substr(i*2,2),16);
+const ds=new DecompressionStream('gzip');
+const code=await new Response(new Blob([bin]).stream().pipeThrough(ds)).text();
+const url=URL.createObjectURL(new Blob([code],{type:'text/javascript'}));
+await import(url);
+})().catch(e=>console.error('[js-boot]',e));
