@@ -3,8 +3,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "assets/_restore/**"
-      - ".github/workflows/assemble-v2-restore.yml"
+      - "assets/_restore/READY"
 permissions:
   contents: write
 jobs:
@@ -15,15 +14,17 @@ jobs:
       - name: Assemble real Vite bundles
         run: |
           set -euo pipefail
-          ls -la assets/_restore/css/ assets/_restore/js/ assets/_restore/data/ || true
+          test -f assets/_restore/READY
+          ls -la assets/_restore/css/ assets/_restore/js/ assets/_restore/data/
           cat assets/_restore/css/* > assets/index-BSI9EAX6.css
           cat assets/_restore/js/* > assets/index-B62bK7Wg.js
+          cat assets/_restore/data/* > data/index.json
           echo "85d77b82dda9f5771db744ee12008982  assets/index-BSI9EAX6.css" | md5sum -c -
           echo "ff52f760c79bb8b21f2c3d52fdd2ebd2  assets/index-B62bK7Wg.js" | md5sum -c -
-          if [ -d assets/_restore/data ]; then
-            cat assets/_restore/data/* > data/index.json
-            echo "6ad5c7e8f5c65b0f1ef4f72b321b9e4a  data/index.json" | md5sum -c -
-          fi
+          echo "6ad5c7e8f5c65b0f1ef4f72b321b9e4a  data/index.json" | md5sum -c -
+          # verify markers
+          grep -q 'body.booth' assets/index-BSI9EAX6.css
+          grep -q 'google-2d-fallback' assets/index-B62bK7Wg.js || grep -q 'Map3D' assets/index-B62bK7Wg.js
           rm -rf assets/_restore assets/_restore_ping.txt
       - name: Commit assembled bundles
         run: |
