@@ -11,14 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch staged Vite bundles
+      - name: Assemble real Vite bundles from gzip+b64 parts
         run: |
           set -euo pipefail
           test -f assets/_restore/READY
-          BASE="https://raw.githubusercontent.com/ramkandimalla94/mmd-restore-staging/main"
-          curl -fsSL "$BASE/assets-index-BSI9EAX6.css" -o assets/index-BSI9EAX6.css
-          curl -fsSL "$BASE/assets-index-B62bK7Wg.js" -o assets/index-B62bK7Wg.js
-          curl -fsSL "$BASE/data-index.json" -o data/index.json
+          shopt -s nullglob
+          css=(assets/_restore/css/[0-9][0-9].txt)
+          js=(assets/_restore/js/[0-9][0-9].txt)
+          data=(assets/_restore/data/[0-9][0-9].txt)
+          test ${#css[@]} -gt 0 && test ${#js[@]} -gt 0 && test ${#data[@]} -gt 0
+          cat "${css[@]}" | base64 -d | gzip -dc > assets/index-BSI9EAX6.css
+          cat "${js[@]}" | base64 -d | gzip -dc > assets/index-B62bK7Wg.js
+          cat "${data[@]}" | base64 -d | gzip -dc > data/index.json
           echo "85d77b82dda9f5771db744ee12008982  assets/index-BSI9EAX6.css" | md5sum -c -
           echo "ff52f760c79bb8b21f2c3d52fdd2ebd2  assets/index-B62bK7Wg.js" | md5sum -c -
           echo "6ad5c7e8f5c65b0f1ef4f72b321b9e4a  data/index.json" | md5sum -c -
@@ -32,5 +36,5 @@ jobs:
           git config user.email "37137053+ramkandimalla94@users.noreply.github.com"
           git add -A
           git diff --cached --quiet && echo "nothing to commit" && exit 0
-          git commit -m "fix: assemble real Vite JS/CSS/data from staging (d43cd66)"
+          git commit -m "fix: assemble real Vite JS/CSS/data from gzip parts (d43cd66)"
           git push
